@@ -1,0 +1,33 @@
+from fastapi import FastAPI, Request
+from pydantic import BaseModel
+from typing import Optional
+
+app = FastAPI()
+
+# Estrutura da mensagem recebida
+class Message(BaseModel):
+    message: str
+    sender: str
+    type: str
+
+# Simula fila de atendimento
+atendentes = {"atendente1": [], "atendente2": []}
+
+@app.post("/webhook")
+async def receber_mensagem(msg: Message):
+    if msg.type == "audio":
+        return {"status": "ignorado", "reason": "Áudio bloqueado"}
+
+    # Simples distribuição
+    menor_fila = min(atendentes, key=lambda x: len(atendentes[x]))
+    atendentes[menor_fila].append(msg.dict())
+
+    return {"status": "enviado ao atendente", whatsapp_bot/
+│
+├── main.py               # Inicia a API FastAPI
+├── database.py           # Conexão com o banco (SQLite)
+├── models.py             # Tabelas do banco
+├── schemas.py            # Schemas do Pydantic
+├── atendimento.py        # Lógica de fila e filtros
+├── router.py             # Rotas organizadas
+└── requirements.txt      # Dependências
